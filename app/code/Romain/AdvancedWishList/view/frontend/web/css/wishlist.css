@@ -1,0 +1,454 @@
+/* ================================================================
+   WISHLIST COMPONENT - STYLES ÉLÉGANTS
+   ================================================================ */
+
+/* Container principal du composant */
+.wishlist-component {
+    position: relative;
+    display: inline-block;
+}
+
+/* ================================================================
+   BOUTON PRINCIPAL - Style moderne et attrayant
+   ================================================================ */
+.wishlist-component .action.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.wishlist-component .action.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.wishlist-component .action.primary:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Effet de ripple au clic */
+.wishlist-component .action.primary::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.wishlist-component .action.primary:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* ================================================================
+   MODAL MAGENTO - Adaptation pour la structure native
+   ================================================================ */
+
+/* Reset de la modal Magento pour notre design custom */
+.modal-inner-wrap {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2) !important;
+    max-width: 500px !important;
+    max-height: 85vh !important;
+    overflow: hidden !important;
+}
+
+/* Header de la modal Magento */
+.modal-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.8) !important;
+    padding: 20px 24px 16px 24px !important;
+    border-radius: 20px 20px 0 0 !important;
+}
+
+.modal-title {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin: 0 !important;
+}
+
+.action-close {
+    background: transparent !important;
+    border: none !important;
+    color: #6b7280 !important;
+    padding: 8px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+}
+
+.action-close:hover {
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+}
+
+/* Contenu de la modal */
+.modal-content[data-role="content"] {
+    padding: 0 24px 24px 24px !important;
+    max-height: calc(85vh - 80px) !important;
+    overflow-y: auto !important;
+    background: transparent !important;
+}
+
+/* Suppression du double modal-content interne */
+#create-wishlist-modal {
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    max-width: none !important;
+}
+
+#create-wishlist-modal .modal-content {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    max-height: none !important;
+    max-width: none !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    position: static !important;
+    overflow: visible !important;
+}
+
+/* ================================================================
+   FORMULAIRE - Design épuré et moderne (dans modal Magento)
+   ================================================================ */
+.modal-content[data-role="content"] .form {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+}
+
+.fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Champs du formulaire dans la modal Magento */
+.modal-content[data-role="content"] .field {
+    margin-bottom: 16px !important;
+    position: relative;
+}
+
+.modal-content[data-role="content"] .label {
+    display: block !important;
+    margin-bottom: 6px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    font-size: 14px !important;
+    transition: color 0.2s ease !important;
+}
+
+.modal-content[data-role="content"] .field.required .label::after {
+    content: " *" !important;
+    color: #ef4444 !important;
+    font-weight: 500 !important;
+}
+
+/* Inputs dans la modal Magento */
+.modal-content[data-role="content"] .input-text, 
+.modal-content[data-role="content"] textarea {
+    width: 100% !important;
+    padding: 10px 14px !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    font-family: inherit !important;
+    background: #ffffff !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-sizing: border-box !important;
+}
+
+.modal-content[data-role="content"] .input-text:focus,
+.modal-content[data-role="content"] textarea:focus {
+    outline: none !important;
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    background: #ffffff !important;
+}
+
+/* Textarea spécifique dans modal */
+.modal-content[data-role="content"] textarea {
+    resize: vertical !important;
+    min-height: 60px !important;
+    line-height: 1.4 !important;
+}
+
+/* ================================================================
+   CHECKBOXES - Design custom moderne
+   ================================================================ */
+.field.choice {
+    margin-bottom: 20px;
+}
+
+.field.choice .control {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.checkbox:checked {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+}
+
+.checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.field.choice .label {
+    margin: 0;
+    font-weight: 500;
+    cursor: pointer;
+    line-height: 1.4;
+    color: #4b5563;
+}
+
+/* ================================================================
+   ACTIONS TOOLBAR - Boutons harmonieux
+   ================================================================ */
+.actions-toolbar {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.actions-toolbar .action {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.actions-toolbar .action.submit.primary {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.actions-toolbar .action.submit.primary:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.actions-toolbar .action.reset {
+    background: #f3f4f6;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+}
+
+.actions-toolbar .action.reset:hover {
+    background: #e5e7eb;
+    color: #4b5563;
+    border-color: #d1d5db;
+}
+
+/* ================================================================
+   MODAL ACTIONS - Boutons de la modal
+   ================================================================ */
+.modal-actions {
+    border-top: 1px solid rgba(229, 231, 235, 0.8);
+    padding-top: 12px;
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.modal-actions .action.cancel {
+    background: transparent;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.modal-actions .action.cancel:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #4b5563;
+}
+
+/* ================================================================
+   ANIMATIONS ET MICRO-INTERACTIONS
+   ================================================================ */
+
+/* Animation d'entrée pour les champs */
+.field {
+    animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation pour les messages d'erreur */
+.field.error .input-text,
+.field.error textarea {
+    border-color: #ef4444;
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* ================================================================
+   RESPONSIVE DESIGN
+   ================================================================ */
+
+/* Correction pour la structure du formulaire dans la modal */
+.modal-content .form {
+    margin: 0;
+    padding: 0;
+}
+
+.modal-content .actions-toolbar .primary,
+.modal-content .actions-toolbar .secondary {
+    flex: 1;
+}
+
+.modal-content .actions-toolbar .primary .action,
+.modal-content .actions-toolbar .secondary .action {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 20px;
+        padding: 24px;
+        border-radius: 16px;
+    }
+    
+    .actions-toolbar {
+        flex-direction: column;
+    }
+    
+    .actions-toolbar .action {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+    
+    .modal-actions .action {
+        width: 100%;
+    }
+}
+
+/* ================================================================
+   ÉTATS DE CHARGEMENT
+   ================================================================ */
+.wishlist-component .action.primary.loading {
+    pointer-events: none;
+    position: relative;
+}
+
+.wishlist-component .action.primary.loading span {
+    opacity: 0;
+}
+
+.wishlist-component .action.primary.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

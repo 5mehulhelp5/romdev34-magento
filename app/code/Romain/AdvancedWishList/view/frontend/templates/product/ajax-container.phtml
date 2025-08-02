@@ -1,0 +1,34 @@
+<?php
+
+/** @var \Romain\AdvancedWishList\Block\Product\AddToWishList $block */ ?>
+
+<div id="advanced-wishlist-block"
+    data-product-id="<?= (int)$block->getProduct()->getId() ?>">
+    <!-- ici sera injecté dynamiquement le HTML de add_to_wishlist.phtml -->
+</div>
+
+<script type="text/javascript">
+    require(['jquery', 'mage/url'], function($, urlBuilder) {
+        $(function() {
+            var $container = $('#advanced-wishlist-block'),
+                productId = $container.data('product-id'),
+                renderUrl = urlBuilder.build('advancedwishlist/ajax/render?product_id=' + productId);
+
+            // Appel AJAX pour récupérer le HTML du block
+            $.get(renderUrl, function(response) {
+                if (response.success && response.html) {
+                    $container.html(response.html);
+
+                    // Réinitialiser les composants Magento après insertion du HTML
+                    require(['mage/apply/main'], function(mage) {
+                        mage.apply($container[0]);
+                    });
+                } else {
+                    $container.html('<p>Error loading wishlist block.</p>');
+                }
+            }).fail(function() {
+                $container.html('<p>Error loading wishlist block.</p>');
+            });
+        });
+    });
+</script>

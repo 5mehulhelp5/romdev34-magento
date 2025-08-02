@@ -1,0 +1,84 @@
+<?php
+/**
+ * @var \Romain\AdvancedWishList\Block\Product\AddToWishlist $block
+ */
+$product = $block->getProduct();
+$isLoggedIn = $block->isCustomerLoggedIn();
+$wishlists = $block->getCustomerWishlists();
+?>
+
+<?php if ($product): ?>
+    <div class="advanced-wishlist-add">
+        <?php if ($isLoggedIn): ?>
+            <?php if (!empty($wishlists)): ?>
+                <div class="wishlist-selector">
+                    <label for="wishlist-select"><?= __('Add to Wishlist:') ?></label>
+                    <select id="wishlist-select" class="wishlist-dropdown">
+                        <option value=""><?= __('Select a wishlist...') ?></option>
+                        <?php foreach ($wishlists as $wishlist): ?>
+                            <option value="<?= (int)$wishlist->getWishlistId() ?>"
+                                    <?= $block->isProductInWishlist($wishlist->getWishlistId()) ? 'disabled' : '' ?>>
+                                <?= $block->escapeHtml($wishlist->getName()) ?>
+                                <?php if ($block->isProductInWishlist($wishlist->getWishlistId())): ?>
+                                    (<?= __('Already added') ?>)
+                                <?php endif; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <button type="button"
+                            class="action secondary add-to-advanced-wishlist"
+                            data-product-id="<?= (int)$product->getId() ?>"
+                            data-add-url="<?= $block->escapeUrl($block->getAddToWishlistUrl()) ?>"
+                            disabled>
+                        <?= __('Add to Wishlist') ?>
+                    </button>
+                </div>
+
+                <!-- Optional: Quick add form with additional options -->
+                <div class="wishlist-options" style="display: none;">
+                    <div class="field qty">
+                        <label for="wishlist-qty"><?= __('Quantity:') ?></label>
+                        <input type="number" id="wishlist-qty" value="1" min="1" step="1" />
+                    </div>
+
+                    <div class="field description">
+                        <label for="wishlist-description"><?= __('Note (Optional):') ?></label>
+                        <textarea id="wishlist-description" rows="2" placeholder="<?= __('Add a personal note...') ?>"></textarea>
+                    </div>
+
+                    <div class="field price-alert">
+                        <label>
+                            <input type="checkbox" id="wishlist-price-alert" />
+                            <?= __('Notify me when price drops below:') ?>
+                        </label>
+                        <input type="number" id="wishlist-target-price" step="0.01" min="0" disabled />
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="no-wishlists">
+                    <p><?= __('You don\'t have any wishlists yet.') ?></p>
+                    <a href="<?= $block->escapeUrl($block->getUrl('advancedwishlist/wishlist/create')) ?>"
+                       class="action primary">
+                        <?= __('Create Your First Wishlist') ?>
+                    </a>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="guest-wishlist">
+                <p><?= __('Please log in to add products to your wishlist.') ?></p>
+                <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="action primary">
+                    <?= __('Sign In') ?>
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <script type="text/x-magento-init">
+    {
+        ".advanced-wishlist-add": {
+            "Romain_AdvancedWishList/js/add-to-advanced-wishlist": {}
+        }
+    }
+    </script>
+<?php endif; ?>

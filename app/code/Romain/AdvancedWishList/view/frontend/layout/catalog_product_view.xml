@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Add to product info section -->
+        <referenceContainer name="product.info.main">
+
+            <block class="Romain\AdvancedWishList\Block\Product\AddToWishList"
+                   name="product.advanced.wishlist"
+                    template="Romain_AdvancedWishList::product/ajax-container.phtml"
+                   after="product.info.addtocart" />
+        </referenceContainer>
+
+    </body>
+</page>

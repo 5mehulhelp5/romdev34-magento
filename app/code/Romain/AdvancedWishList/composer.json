@@ -1,0 +1,28 @@
+
+{
+    "name": "Romain/advanced-wishlist",
+    "description": "Advanced WishList module for Magento 2",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Romain",
+            "email": "romdev34@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~7.4.0||~8.0.0||~8.1.0",
+        "magento/framework": "*",
+        "magento/module-wishlist": "*",
+        "magento/module-customer": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Romain\\AdvancedWishList\\": ""
+        }
+    }
+}

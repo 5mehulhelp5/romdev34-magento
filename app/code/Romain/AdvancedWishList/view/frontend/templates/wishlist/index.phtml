@@ -1,0 +1,191 @@
+<?php
+
+/** @var \Romain\AdvancedWishList\Block\WishList\Index $block */
+$wishlists = $block->getCustomerWishLists();
+$isLoggedIn = $block->isCustomerLoggedIn();
+?>
+
+<div class="advanced-wishlist-page">
+
+    <div class="wishlist-actions">
+        <!-- Le composant modal sera rendu ici -->
+        <div id="wishlist-modal-container" data-bind="scope: 'advanced_wishlist_modal'">
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        </div>
+    </div>
+
+    <div class="wishlist-content" data-bind="scope: 'advanced_wishlist_modal'">
+        <?php if (!$isLoggedIn): ?>
+            <div class="message info">
+                <span><?= __('Please log in to view your wishlists.') ?></span>
+                <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login')) ?>" class="action login">
+                    <?= __('Log In') ?>
+                </a>
+            </div>
+        <?php elseif (empty($wishlists)): ?>
+            <div class="empty-wishlists">
+                <div class="message info">
+                    <span><?= __('You have no wishlists yet.') ?></span>
+                </div>
+                <div class="actions-toolbar">
+                    <div class="primary">
+                        <button type="button"
+                            class="action primary create-wishlist"
+                            data-trigger="trigger"
+                            data-bind="click: openModal">
+                            <span><?= __('Create Your First Wishlist') ?></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="wishlists-grid">
+
+
+                <div class="wishlist-items">
+                    <?php foreach ($wishlists as $wishlist): ?>
+                        <?php $block->setWishList((int)$wishlist['wishlist_id']); ?>
+                        <div class="wishlist-item <?= $wishlist['is_default'] ? 'default' : '' ?>">
+                            <div class="wishlist-card">
+                                <div class="wishlist-header">
+                                    <h3 class="wishlist-name">
+                                        <a href="<?= $block->escapeUrl($block->getWishListViewUrl((int)$wishlist['wishlist_id'])) ?>"
+                                        class="advanced-wishlist-link" data-id="<?= $wishlist['wishlist_id'] ?>"
+                                        data-url="<?= $block->escapeUrl($block->getWishListViewUrl((int)$wishlist['wishlist_id'])) ?>">
+                                        <?= $block->escapeHtml($wishlist['name']) ?>
+                                        <?php if ($wishlist['is_default']): ?>
+                                            <span class="default-badge"><?= __('Default') ?></span>
+                                        <?php endif; ?>
+                                        </a>
+                                    </h3>
+
+                                    <div class="wishlist-actions">
+
+                                        <?php if ($wishlist['is_public']): ?>
+                                            <button type="button"
+                                                class="action secondary share"
+                                                onclick="navigator.clipboard.writeText('<?= $block->escapeUrl($block->getWishListShareUrl($wishlist['share_code'])) ?>')"
+                                                title="<?= __('Partager la wishlist') ?>">
+                                                <?= __('Partager') ?>
+                                            </button>
+                                        <?php endif; ?>
+
+                                        <?php if (!$wishlist['is_default']): ?>
+                                            <button type="button"
+                                                class="action secondary delete"
+                                                onclick="confirmDelete('<?= $block->escapeUrl($block->getWishListDeleteUrl((int)$wishlist['wishlist_id'])) ?>', '<?= $block->escapeHtml($wishlist['name']) ?>')"
+                                                title="<?= __('Supprimer') ?>">
+                                                <?= __('Supprimer') ?>
+                                            </button>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <div class="wishlist-info">
+                                    <?php if (!empty($wishlist['description'])): ?>
+                                        <p class="wishlist-description">
+                                            <?= $block->escapeHtml($wishlist['description']) ?>
+                                        </p>
+                                    <?php endif; ?>
+
+                                    <div class="wishlist-meta">
+                                        <span class="created-date">
+                                            <?= __('Created: %1', $block->formatWishListDate($wishlist['created_at'])) ?>
+                                        </span>
+
+                                        <span class="visibility">
+                                            <?= $wishlist['is_public'] ? __('Public') : __('Private') ?>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="wishlist-stats">
+                                    <!-- Vous pouvez ajouter ici le nombre d'items si vous avez une table de liaison -->
+                                    <span class="item-count">
+                                        <?= $block->getItemsCount((int)$wishlist['wishlist_id']) . ' item (s)' ?> <!-- À remplacer par le vrai count -->
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+    {
+    "*": {
+        "Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout(); ?>
+    }
+}
+</script>
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sélectionner tous les éléments avec la classe 'advanced-wishlist-link'
+        const wishlistLinks = document.querySelectorAll('.advanced-wishlist-link');
+
+        // Ajouter un event listener à chaque lien
+        wishlistLinks.forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const targetUrl = this.getAttribute('data-url');
+                const id = this.getAttribute('data-id');
+                if (!targetUrl) {
+                    console.error('URL de la wishlist non trouvée');
+                    return;
+                }
+
+                // Votre logique de fetch ici
+                fetch(targetUrl, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(() => {
+                        // Redirection manuelle
+                        const separator = targetUrl.includes('?') ? '&' : '?';
+                        window.location.href = '/advancedwishlist/wishlist/view/id/' + id + separator + '_t=' + Date.now();
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du fetch:', error);
+                        window.location.href = targetUrl;
+                    });
+            });
+        });
+    });
+
+    function confirmDelete(deleteUrl, wishlistName) {
+        if (confirm('<?= __("Are you sure you want to delete the wishlist %s ?") ?>'.replace('%s', wishlistName))) {
+            console.log(deleteUrl);
+            fetch(deleteUrl, {
+                method: 'GET',
+                credentials: 'same-origin',
+            })
+                .then(() => {
+                    // Redirection manuelle
+                    window.location.href = '/advancedwishlist';
+                    location.reload();
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert("Erreur lors de la suppression.");
+                });
+        }
+    }
+
+    // Fonction pour copier le lien de partage
+    function copyShareLink(shareUrl) {
+        navigator.clipboard.writeText(shareUrl).then(function() {
+            // Afficher un message de succès
+            alert('<?= __("Share link copied to clipboard!") ?>');
+        });
+    }
+</script>

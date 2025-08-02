@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>My WishLists</title>
+        <css src="Romain_AdvancedWishList::css/wishlist.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Romain\AdvancedWishList\Block\WishList\Index" name="advanced.wishlist" template="Romain_AdvancedWishList::wishlist/index.phtml">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="advanced_wishlist_modal" xsi:type="array">
+                                <item name="component" xsi:type="string">
+                                    Romain_AdvancedWishList/js/component/wishlist-modal</item>
+                                <item name="template" xsi:type="string">
+                                    Romain_AdvancedWishList/component/wishlist-modal</item>
+                                <item name="buttonText" xsi:type="string">Créer une wishlist</item>
+                                <item name="children" xsi:type="array">
+                                    <item name="wishlist_form" xsi:type="array">
+                                        <item name="component" xsi:type="string">
+                                            Romain_AdvancedWishList/js/component/wishlist-form</item>
+                                        <item name="template" xsi:type="string">
+                                            Romain_AdvancedWishList/component/wishlist-form</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

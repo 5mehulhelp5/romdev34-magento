@@ -1,0 +1,143 @@
+<?php
+/**
+ * @var \Romain\AdvancedWishList\Block\WishListItem\WishlistItems $block
+ */
+$wishlist = $block->getWishlist();
+$items = $block->getWishlistItemsWithProducts();
+$canModify = $block->canModifyWishlist();
+
+?>
+
+<div class="advanced-wishlist-items">
+    <?php if ($wishlist): ?>
+        <div class="wishlist-header">
+            <h2><?= $block->escapeHtml($wishlist->getName()) ?></h2>
+            <?php if ($wishlist->getDescription()): ?>
+                <p class="wishlist-description"><?= $block->escapeHtml($wishlist->getDescription()) ?></p>
+            <?php endif; ?>
+
+            <?php if ($block->isPublicWishlist()): ?>
+                <div class="wishlist-public-info">
+                    <span class="public-badge"><?= __('Public Wishlist') ?></span>
+                    <?php if ($block->getPublicViewUrl()): ?>
+                        <a href="<?= $block->escapeUrl($block->getPublicViewUrl()) ?>" class="share-link">
+                            <?= __('Share this wishlist') ?>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (empty($items)): ?>
+            <div class="empty-wishlist">
+                <p><?= __('This wishlist is empty.') ?></p>
+                <?php if ($canModify): ?>
+                    <a href="<?= $block->escapeUrl($block->getUrl('/')) ?>" class="action primary">
+                        <?= __('Continue Shopping') ?>
+                    </a>
+                <?php endif; ?>
+            </div>
+        <?php else: ?>
+            <div class="wishlist-items-grid">
+                <?php foreach ($items as $itemData): ?>
+                    <?php
+                    $item = $itemData['item'];
+                    $product = $itemData['product'];
+                    ?>
+                    <div class="wishlist-item" data-item-id="<?= (int)$item->getItemId() ?>">
+                        <div class="item-image">
+                            <a href="<?= $block->escapeUrl($itemData['url']) ?>">
+                                <img src="<?= $block->escapeUrl($itemData['image_url']) ?>"
+                                     alt="<?= $block->escapeHtml($product->getName()) ?>" />
+                            </a>
+                        </div>
+
+                        <div class="item-details">
+                            <h3 class="item-name">
+                                <a href="<?= $block->escapeUrl($itemData['url']) ?>">
+                                    <?= $block->escapeHtml($product->getName()) ?>
+                                </a>
+                            </h3>
+
+                            <div class="item-price">
+                                <?= $itemData['price'] ?>
+                            </div>
+
+                            <?php if ($item->getDescription()): ?>
+                                <div class="item-description">
+                                    <?= $block->escapeHtml($item->getDescription()) ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="item-meta">
+                                <span class="added-date">
+                                    <?= __('Added: %1', $block->formatDate($item->getAddedAt())) ?>
+                                </span>
+
+                                <?php if ($item->getQty() > 1): ?>
+                                    <span class="item-qty">
+                                        <?= __('Qty: %1', $item->getQty()) ?>
+                                    </span>
+                                <?php endif; ?>
+
+                                <?php if ($item->isPriceAlert() && $item->getTargetPrice()): ?>
+                                    <span class="price-alert">
+                                        <?= __('Price Alert: %1', $block->escapeHtml($block->formatPrice($item->getTargetPrice()))) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div class="item-actions">
+
+                            <?php if ($canModify): ?>
+                                <button type="button"
+                                        class="action secondary remove-item"
+                                        data-item-id="<?= (int)$item->getItemId() ?>"
+                                        data-product-id="<?= (int)$product->getId() ?>"
+                                        data-wishlist-id="<?= (int)$item->getWishlistId() ?>"
+                                        data-remove-url="<?= $block->escapeUrl($block->getRemoveFromWishlistUrl()) ?>">
+                                    <?= __('Remove') ?>
+                                </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($canModify && $block->isPublicWishlist()): ?>
+            <div class="wishlist-share-section">
+                <h3><?= __('Share this Wishlist') ?></h3>
+                <form class="share-wishlist-form" data-share-url="<?= $block->escapeUrl($block->getShareUrl()) ?>">
+                    <div class="field">
+                        <label for="share-email"><?= __('Email Address') ?></label>
+                        <input type="email" id="share-email" name="email" required />
+                    </div>
+
+                    <div class="field">
+                        <label for="share-message"><?= __('Personal Message (Optional)') ?></label>
+                        <textarea id="share-message" name="message" rows="3"></textarea>
+                    </div>
+
+                    <input type="hidden" name="wishlist_id" value="<?= (int)$wishlist->getWishlistId() ?>" />
+
+                    <button type="submit" class="action primary"><?= __('Share Wishlist') ?></button>
+                </form>
+            </div>
+        <?php endif; ?>
+
+    <?php else: ?>
+        <div class="no-wishlist">
+            <p><?= __('Wishlist not found.') ?></p>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script type="text/x-magento-init">
+{
+    ".advanced-wishlist-items": {
+        "Romain_AdvancedWishList/js/wishlist-item": {}
+    }
+}
+</script>

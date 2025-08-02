@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+   * Copyright © 2025 Romain ITOFO. Tous droits réservés.
+   *
+   * @author Romain ITOFO
+   * @license Propriétaire
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_logout">
+        <observer name="purge_wishlist_cache_on_logout"
+                  instance="Romain\AdvancedWishList\Observer\PurgeWishlistCacheOnLogout"/>
+    </event>
+    <event name="customer_login">
+        <observer name="purge_wishlist_cache_on_login"
+                  instance="Romain\AdvancedWishList\Observer\PurgeWishlistCacheOnLogin"/>
+    </event>
+</config>

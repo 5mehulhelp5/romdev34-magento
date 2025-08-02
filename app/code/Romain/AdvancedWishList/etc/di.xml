@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Repository interface preference -->
+    <preference for="Romain\AdvancedWishList\Api\WishListRepositoryInterface"
+        type="Romain\AdvancedWishList\Model\WishListRepository" />
+
+    <!-- Data interface preference -->
+    <preference for="Romain\AdvancedWishList\Api\Data\WishListInterface"
+        type="Romain\AdvancedWishList\Model\WishList" />
+
+  <!-- Interface preferences -->
+    <preference for="Romain\AdvancedWishList\Api\Data\WishListItemInterface" 
+                type="Romain\AdvancedWishList\Model\WishListItem" />
+    
+    <preference for="Romain\AdvancedWishList\Api\Data\WishListShareInterface" 
+                type="Romain\AdvancedWishList\Model\WishListShare" />
+    
+    <preference for="Romain\AdvancedWishList\Api\WishListItemRepositoryInterface" 
+                type="Romain\AdvancedWishList\Model\WishListItemRepository" />
+                
+
+</config>

@@ -1,0 +1,73 @@
+<div class="wishlist-component">
+
+    <button type="button" 
+            class="action primary" 
+            data-bind="click: openModal">
+        <!--  DATA-BINDING KNOCKOUT :
+             - data-bind="click: openModal" : Lie le clic à la méthode openModal() du composant JS
+               Quand on clique, Knockout appelle this.openModal() automatiquement -->
+        
+        <span data-bind="text: buttonText"></span>
+        <!-- DATA-BINDING KNOCKOUT :
+             - data-bind="text: buttonText" : Affiche la valeur de l'observable buttonText
+             - Le texte se met à jour automatiquement si buttonText change
+             - buttonText est défini dans le JS : ko.observable('Créer une wishlist') -->
+    </button>
+    
+    <!-- ================================================================ -->
+    <!-- MODAL MASQUÉE - Contenu affiché en popup -->
+    <!-- ================================================================ -->
+    
+    <!-- Modal -->
+    <div id="create-wishlist-modal" style="display: none;">
+
+        
+        <div class="modal-content">         
+            <!-- Inclusion du composant form -->
+            <!-- ko foreach: elems() -->
+                <!-- KNOCKOUT FOREACH :
+                     - Boucle sur tous les composants enfants
+                     - elems() retourne un array : [wishlist_form_component]
+                     - Exécute le contenu pour chaque enfant (ici 1 fois)
+                     - Change le contexte : $data devient l'objet enfant -->
+                
+                <!-- ko if: getTemplate -->
+                    <!-- KNOCKOUT CONDITION :
+                         - Vérifie que la fonction getTemplate existe sur l'enfant
+                         - Sécurité : évite les erreurs si un enfant n'a pas de template
+                         - getTemplate est une méthode standard des UI Components -->
+                    
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                    <!-- KNOCKOUT TEMPLATE :
+                         - Charge et affiche le template HTML de l'enfant
+                         - getTemplate() retourne : "Romain_AdvancedWishList/component/wishlist-form"
+                         - Knockout résout le chemin et affiche le template
+                         - Le template hérite du contexte de l'enfant (data-binding automatique) -->
+                
+                <!-- /ko -->
+                <!-- Fin de la condition if -->
+            
+            <!-- /ko -->
+            <!-- Fin de la boucle foreach -->
+            
+            <!-- Actions de la modal -->
+            <div class="modal-actions" style="border-top: 1px solid #e3e3e3; padding-top: 15px; margin-top: 15px;">
+                <!-- Conteneur pour les actions avec styling inline
+                     - border-top : Séparateur visuel
+                     - padding/margin : Espacement -->
+                
+                <button type="button" 
+                        class="action cancel" 
+                        data-bind="click: closeModal">
+                    <!-- BOUTON ANNULER :
+                         - type="button" : Bouton simple (pas de submit)
+                         - class="action cancel" : Classes CSS Magento pour bouton secondaire
+                         - data-bind="click: closeModal" : Lie au clic la méthode closeModal() -->
+                    
+                    <span>Annuler</span>
+                    <!-- Texte statique (pas d'observable car ne change jamais) -->
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
