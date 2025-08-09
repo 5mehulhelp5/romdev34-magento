@@ -19,6 +19,7 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\View\Result\PageFactory;
 use Psr\Log\LoggerInterface;
 use Romain\AdvancedWishList\Api\WishListRepositoryInterface;
+use Magento\Framework\UrlInterface;
 
 /**
  * Controller view wishlist
@@ -32,7 +33,8 @@ class View implements HttpGetActionInterface
         private readonly ManagerInterface            $messageManager,
         private readonly CustomerSession             $customerSession,
         private readonly WishListRepositoryInterface $wishlistRepository,
-        private readonly LoggerInterface             $logger
+        private readonly LoggerInterface             $logger,
+        private readonly UrlInterface                $urlBuilder
     ) {
     }
 
@@ -42,7 +44,9 @@ class View implements HttpGetActionInterface
             $this->messageManager->addErrorMessage(__('You must be logged in to view your wishlists.'));
             $redirect = $this->redirectFactory->create();
 
-            return $redirect->setPath('customer/account/login');
+            return $redirect->setUrl(
+                $this->urlBuilder->getUrl('customer/account/login')
+            );
         }
 
         $wishlist_id = (int)$this->request->getParam('id');

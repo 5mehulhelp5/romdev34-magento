@@ -17,6 +17,7 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Theme\Block\Html\Breadcrumbs;
 use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\UrlInterface;
 
 /**
  * Advanced WishList Index Controller
@@ -26,18 +27,18 @@ class Index implements HttpGetActionInterface
     /**
      * Constructor
      *
-     * @param PageFactory       $resultPageFactory
-     * @param ManagerInterface  $messageManager
-     * @param RedirectFactory   $resultRedirectFactory*
-     *
+     * @param PageFactory      $resultPageFactory
+     * @param ManagerInterface $messageManager
+     * @param RedirectFactory  $resultRedirectFactory
+     * @param CustomerSession  $customerSession
+     * @param UrlInterface     $urlBuilder
      */
     public function __construct(
-        private PageFactory      $resultPageFactory,
-        private ManagerInterface $messageManager,
-        private RedirectFactory  $resultRedirectFactory,
-        private CustomerSession $customerSession,
-
-
+        private readonly PageFactory      $resultPageFactory,
+        private readonly ManagerInterface $messageManager,
+        private readonly RedirectFactory  $resultRedirectFactory,
+        private readonly CustomerSession  $customerSession,
+        private readonly UrlInterface     $urlBuilder
     ) {
     }
 
@@ -53,7 +54,9 @@ class Index implements HttpGetActionInterface
             $this->messageManager->addError(__('You must be logged in to access your wishlists.'));
             $result_redirect = $this->resultRedirectFactory->create();
 
-            return $result_redirect->setPath('/customer/account/login');
+            return $result_redirect->setUrl(
+                $this->urlBuilder->getUrl('customer/account/login')
+            );
         }
 
         $result_page = $this->resultPageFactory->create();

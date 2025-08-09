@@ -19,23 +19,17 @@ $canModify = $block->canModifyWishlist();
             <?php if ($block->isPublicWishlist()): ?>
                 <div class="wishlist-public-info">
                     <span class="public-badge"><?= __('Public Wishlist') ?></span>
-                    <?php if ($block->getPublicViewUrl()): ?>
-                        <a href="<?= $block->escapeUrl($block->getPublicViewUrl()) ?>" class="share-link">
-                            <?= __('Share this wishlist') ?>
-                        </a>
-                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>
-
+        <?php if ($canModify): ?>
+            <a href="<?= $block->escapeUrl($block->getUrl('/')) ?>" class="action primary">
+                <?= __('Continue Shopping') ?>
+            </a>
+        <?php endif; ?>
         <?php if (empty($items)): ?>
             <div class="empty-wishlist">
                 <p><?= __('This wishlist is empty.') ?></p>
-                <?php if ($canModify): ?>
-                    <a href="<?= $block->escapeUrl($block->getUrl('/')) ?>" class="action primary">
-                        <?= __('Continue Shopping') ?>
-                    </a>
-                <?php endif; ?>
             </div>
         <?php else: ?>
             <div class="wishlist-items-grid">
@@ -89,16 +83,26 @@ $canModify = $block->canModifyWishlist();
                         </div>
 
                         <div class="item-actions">
-
                             <?php if ($canModify): ?>
-                                <button type="button"
-                                        class="action secondary remove-item"
-                                        data-item-id="<?= (int)$item->getItemId() ?>"
-                                        data-product-id="<?= (int)$product->getId() ?>"
-                                        data-wishlist-id="<?= (int)$item->getWishlistId() ?>"
-                                        data-remove-url="<?= $block->escapeUrl($block->getRemoveFromWishlistUrl()) ?>">
-                                    <?= __('Remove') ?>
-                                </button>
+                                <!-- Formulaire de suppression -->
+                                <form action="<?= $block->escapeUrl($block->getUrl('advancedwishlist/item/remove')) ?>"
+                                      method="post"
+                                      class="remove-item-form">
+
+                                    <?= $block->getBlockHtml('formkey') ?>
+                                    <input type="hidden" name="item_id" value="<?= (int)$item->getItemId() ?>" />
+                                    <input type="hidden" name="product_id" value="<?= (int)$product->getId() ?>" />
+                                    <input type="hidden" name="wishlist_id" value="<?= (int)$item->getWishlistId() ?>" />
+
+                                    <button type="submit"
+                                            class="action secondary remove-item"
+                                            data-item-id="<?= (int)$item->getItemId() ?>"
+                                            data-product-id="<?= (int)$product->getId() ?>"
+                                            data-wishlist-id="<?= (int)$item->getWishlistId() ?>"
+                                            data-remove-url="<?= $block->escapeUrl($block->getRemoveFromWishlistUrl()) ?>">
+                                        <?= __('Remove') ?>
+                                    </button>
+                                </form>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -109,7 +113,13 @@ $canModify = $block->canModifyWishlist();
         <?php if ($canModify && $block->isPublicWishlist()): ?>
             <div class="wishlist-share-section">
                 <h3><?= __('Share this Wishlist') ?></h3>
-                <form class="share-wishlist-form" data-share-url="<?= $block->escapeUrl($block->getShareUrl()) ?>">
+                <form action="<?= $block->escapeUrl($block->getUrl('advancedwishlist/wishlist/share')) ?>"
+                      method="post"
+                      class="share-wishlist-form"
+                      data-share-url="<?= $block->escapeUrl($block->getShareUrl()) ?>">
+
+                    <?= $block->getBlockHtml('formkey') ?>
+
                     <div class="field">
                         <label for="share-email"><?= __('Email Address') ?></label>
                         <input type="email" id="share-email" name="email" required />
@@ -135,9 +145,9 @@ $canModify = $block->canModifyWishlist();
 </div>
 
 <script type="text/x-magento-init">
-{
-    ".advanced-wishlist-items": {
-        "Romain_AdvancedWishList/js/wishlist-item": {}
+    {
+        ".advanced-wishlist-items": {
+            "Romain_AdvancedWishList/js/wishlist-item-form": {}
+        }
     }
-}
 </script>

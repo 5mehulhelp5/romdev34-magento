@@ -133,14 +133,14 @@ class WishListItemRepository implements WishListItemRepositoryInterface
      * @return bool
      * @throws CouldNotDeleteException
      */
-    public function removeProductFromWishlist(int $wishlistId, int $productId): bool
+    public function removeItemFromWishlist(int $wishlistId, int $itemId): bool
     {
         try {
             $collection = $this->collectionFactory->create();
             $item = $collection->addWishlistFilter($wishlistId)
-                              ->addProductFilter($productId)
+                              ->addItemFilter($itemId)
                               ->getFirstItem();
-            $rows_affected = $this->resource->removeProduct($wishlistId, $productId);
+            $rows_affected = $this->resource->removeProduct($wishlistId, $itemId);
 
             return $rows_affected > 0;
         } catch (\Exception $exception) {

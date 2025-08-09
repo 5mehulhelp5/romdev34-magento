@@ -58,7 +58,7 @@ class Link extends \Magento\Framework\View\Element\Html\Link implements SortLink
      */
     public function getLabel(): Phrase
     {
-        return __('Module custom wishlist');
+        return __('Démo wish list');
     }
 
     /**

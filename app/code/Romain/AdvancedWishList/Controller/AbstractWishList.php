@@ -52,8 +52,8 @@ class AbstractWishList
         protected JsonFactory                 $jsonFactory,
         protected WishListRepositoryInterface $wishListRepository,
         protected CustomerSession             $customerSession,
-        private CacheContextFactory           $cacheContextFactory,
-        private EventManager                  $eventManager
+        private readonly CacheContextFactory  $cacheContextFactory,
+        private readonly EventManager         $eventManager
     ) {
         $this->cache = $cache;
         $this->cacheTypeList = $cacheTypeList;

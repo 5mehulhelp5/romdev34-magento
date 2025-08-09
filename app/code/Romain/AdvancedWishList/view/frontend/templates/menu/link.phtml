@@ -1,35 +1,29 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+/* @var Link $block */
+use Romain\AdvancedWishList\Block\Menu\Link;
 ?>
-<li class="link wishlist" data-bind="scope: 'wishlist'">
-    <a id="advanced-wishlist-link" <?= /* @noEscape */ $block->getLinkAttributes() ?>><?= $block->escapeHtml($block->getLabel()) ?>
-        <!-- ko if: wishlist().counter -->
-        <span data-bind="text: wishlist().counter" class="counter qty"></span>
-        <!-- /ko -->
+
+<li class="link wishlist" id="advanced-wishlist-menu-item">
+    <a id="advanced-wishlist-link" <?= /* @noEscape */ $block->getLinkAttributes() ?>>
+        <?= $block->escapeHtml($block->getLabel()) ?>
+        <span class="counter qty" style="display: none;">0</span>
     </a>
 </li>
-
-<script type="text/javascript">
-    require(['jquery'], function($) {
-        $('#advanced-wishlist-link').on('click', function (e) {
-            e.preventDefault();
-            // Ajoute un timestamp pour forcer le bypass du cache
-            var ts = new Date().getTime();
-            window.location.href = '/advancedwishlist?_=' + ts;
-        });
-    });
-</script>
 
 <script type="text/x-magento-init">
     {
         "*": {
             "Magento_Ui/js/core/app": {
                 "components": {
-                    "wishlist": {
-                        "component": "Magento_Wishlist/js/view/wishlist"
+                    "advanced-wishlist": {
+                        "component": "Romain_AdvancedWishList/js/view/advanced-wishlist"
                     }
                 }
             }
         }
     }
-
 </script>

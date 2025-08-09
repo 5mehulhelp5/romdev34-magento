@@ -22,26 +22,8 @@ $isLoggedIn = $block->isCustomerLoggedIn();
                     <?= __('Log In') ?>
                 </a>
             </div>
-        <?php elseif (empty($wishlists)): ?>
-            <div class="empty-wishlists">
-                <div class="message info">
-                    <span><?= __('You have no wishlists yet.') ?></span>
-                </div>
-                <div class="actions-toolbar">
-                    <div class="primary">
-                        <button type="button"
-                            class="action primary create-wishlist"
-                            data-trigger="trigger"
-                            data-bind="click: openModal">
-                            <span><?= __('Create Your First Wishlist') ?></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
         <?php else: ?>
             <div class="wishlists-grid">
-
-
                 <div class="wishlist-items">
                     <?php foreach ($wishlists as $wishlist): ?>
                         <?php $block->setWishList((int)$wishlist['wishlist_id']); ?>
@@ -60,15 +42,6 @@ $isLoggedIn = $block->isCustomerLoggedIn();
                                     </h3>
 
                                     <div class="wishlist-actions">
-
-                                        <?php if ($wishlist['is_public']): ?>
-                                            <button type="button"
-                                                class="action secondary share"
-                                                onclick="navigator.clipboard.writeText('<?= $block->escapeUrl($block->getWishListShareUrl($wishlist['share_code'])) ?>')"
-                                                title="<?= __('Partager la wishlist') ?>">
-                                                <?= __('Partager') ?>
-                                            </button>
-                                        <?php endif; ?>
 
                                         <?php if (!$wishlist['is_default']): ?>
                                             <button type="button"
@@ -122,45 +95,7 @@ $isLoggedIn = $block->isCustomerLoggedIn();
 }
 </script>
 
-
 <script>
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Sélectionner tous les éléments avec la classe 'advanced-wishlist-link'
-        const wishlistLinks = document.querySelectorAll('.advanced-wishlist-link');
-
-        // Ajouter un event listener à chaque lien
-        wishlistLinks.forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const targetUrl = this.getAttribute('data-url');
-                const id = this.getAttribute('data-id');
-                if (!targetUrl) {
-                    console.error('URL de la wishlist non trouvée');
-                    return;
-                }
-
-                // Votre logique de fetch ici
-                fetch(targetUrl, {
-                    method: 'GET',
-                    credentials: 'same-origin',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                    .then(() => {
-                        // Redirection manuelle
-                        const separator = targetUrl.includes('?') ? '&' : '?';
-                        window.location.href = '/advancedwishlist/wishlist/view/id/' + id + separator + '_t=' + Date.now();
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors du fetch:', error);
-                        window.location.href = targetUrl;
-                    });
-            });
-        });
-    });
 
     function confirmDelete(deleteUrl, wishlistName) {
         if (confirm('<?= __("Are you sure you want to delete the wishlist %s ?") ?>'.replace('%s', wishlistName))) {

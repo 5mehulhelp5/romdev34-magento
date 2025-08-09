@@ -1,4 +1,7 @@
 <?php
+/**
+ * Améliorations suggérées pour votre WishListShareService
+ */
 
 declare(strict_types=1);
 
@@ -32,14 +35,6 @@ class WishListShareService
 
     /**
      * Share wishlist via email
-     *
-     * @param int         $wishlistId
-     * @param string      $email
-     * @param string|null $message
-     * @param int         $customerId
-     *
-     * @return WishListShareInterface
-     * @throws LocalizedException
      */
     public function shareWishlist(
         int     $wishlistId,
@@ -48,38 +43,58 @@ class WishListShareService
         int     $customerId
     ): WishListShareInterface {
         try {
-            // Verify wishlist exists and is public or belongs to customer
+            // Verify wishlist exists and is accessible
             $wishlist = $this->wishListRepository->getById($wishlistId);
 
-            if (!$wishlist->isPublic() && $wishlist->getCustomerId() !== $customerId) {
-                throw new LocalizedException(__('You can only share public wishlists or your own wishlists.'));
+            // ⭐ Vérifications de sécurité améliorées
+            if (!$this->canShareWishlist($wishlist, $customerId)) {
+                throw new LocalizedException(__('You are not allowed to share this wishlist.'));
             }
 
-            // Create share record
+            // Create share record avec données enrichies
             $share = $this->wishListShareFactory->create();
             $share->setWishlistId($wishlistId)
                   ->setSharedWithEmail($email)
-                  ->setShareMessage($message);
+                  ->setShareMessage($message)
+                  ->setSharedAt(date('Y-m-d H:i:s'))
+                  ->setViewCount(0);
 
-            $this->wishListShareResource->save($share);
-
+            // ⭐ IMPORTANT: Utiliser save() pour déclencher les événements de cache
+            $share->save(); // Ceci déclenche afterSave() et les observers !
             // Send email notification
             $this->sendShareEmail($wishlist, $email, $message);
 
             return $share;
         } catch (\Exception $e) {
-            $this->logger->error('Error sharing wishlist: ' . $e->getMessage());
+            $this->logger->error('Error sharing wishlist: ' . $e->getMessage(), [
+                'wishlist_id' => $wishlistId,
+                'email'       => $email,
+                'customer_id' => $customerId
+            ]);
             throw new LocalizedException(__('Could not share wishlist: %1', $e->getMessage()));
         }
     }
 
     /**
-     * Get wishlist by share code
-     *
-     * @param string $shareCode
-     *
-     * @return WishListInterface
-     * @throws LocalizedException
+     * ⭐ Vérifier les permissions de partage
+     */
+    private function canShareWishlist(WishListInterface $wishlist, int $customerId): bool
+    {
+        // Le propriétaire peut toujours partager
+        if ($wishlist->getCustomerId() === $customerId) {
+            return true;
+        }
+
+        // Les wishlists publiques peuvent être partagées par n'importe qui (optionnel)
+        if ($wishlist->isPublic()) {
+            return true; // ou false selon votre logique business
+        }
+
+        return false;
+    }
+
+    /**
+     * Get wishlist by share code avec gestion du cache
      */
     public function getWishlistByShareCode(string $shareCode): WishListInterface
     {
@@ -92,24 +107,21 @@ class WishListShareService
 
             return $wishlist;
         } catch (\Exception $e) {
+            $this->logger->error('Error loading shared wishlist: ' . $e->getMessage(), [
+                'share_code' => $shareCode
+            ]);
             throw new LocalizedException(__('Could not load shared wishlist: %1', $e->getMessage()));
         }
     }
 
     /**
-     * Increment view count for shared wishlist
-     *
-     * @param string $shareCode
-     *
-     * @return void
-     * @throws LocalizedException
+     * Increment view count avec gestion améliorée
      */
     public function incrementViewCount(string $shareCode): void
     {
         try {
             $wishlist = $this->getWishlistByShareCode($shareCode);
 
-            // Find the most recent share record for this wishlist
             $connection = $this->wishListShareResource->getConnection();
             $select = $connection->select()
                                  ->from($this->wishListShareResource->getMainTable())
@@ -120,42 +132,43 @@ class WishListShareService
             $shareData = $connection->fetchRow($select);
 
             if ($shareData) {
+                // ⭐ Charger le modèle complet
                 $share = $this->wishListShareFactory->create();
-                $share->setData($shareData);
-                $share->incrementViewCount();
-                $this->wishListShareResource->save($share);
+                $this->wishListShareResource->load($share, $shareData['share_id']);
+
+                if ($share->getId()) {
+                    $share->incrementViewCount();
+                    $share->save(); // Déclenche les événements de cache !
+                }
             }
         } catch (\Exception $e) {
-            $this->logger->error('Error incrementing view count: ' . $e->getMessage());
+            $this->logger->error('Error incrementing view count: ' . $e->getMessage(), [
+                'share_code' => $shareCode
+            ]);
             // Don't throw exception for view count errors
         }
     }
 
     /**
-     * Send share email notification
-     *
-     * @param WishListInterface $wishlist
-     * @param string                                              $email
-     * @param string|null                                         $message
-     *
-     * @return void
+     * Send share email notification (votre code existant amélioré)
      */
-    private function sendShareEmail($wishlist, string $email, ?string $message): void
+    private function sendShareEmail(WishListInterface $wishlist, string $email, ?string $message): void
     {
         try {
             $this->inlineTranslation->suspend();
 
             $storeId = $this->storeManager->getStore()->getId();
-            $shareUrl = $this->storeManager->getStore()->getBaseUrl(
-                ) . 'advancedwishlist/share/view/code/' . $wishlist->getShareCode();
+            $shareUrl = $this->storeManager->getStore()->getBaseUrl() .
+                'advancedwishlist/share/view/code/' . $wishlist->getShareCode();
 
             $templateVars = [
-                'wishlist_name' => $wishlist->getName(),
-                'share_url'     => $shareUrl,
-                'share_message' => $message,
-                'store_name'    => $this->storeManager->getStore()->getName()
+                'wishlist_name'        => $wishlist->getName(),
+                'wishlist_description' => $wishlist->getDescription(),
+                'share_url'            => $shareUrl,
+                'share_message'        => $message,
+                'store_name'           => $this->storeManager->getStore()->getName(),
+                'sender_name'          => 'Customer' // Vous pouvez enrichir avec le nom du customer
             ];
-
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier('advanced_wishlist_share_email')
                 ->setTemplateOptions([
@@ -169,10 +182,18 @@ class WishListShareService
                 ])
                 ->addTo($email)
                 ->getTransport();
-
             $transport->sendMessage();
+
+            $this->logger->info('Wishlist share email sent successfully', [
+                'wishlist_id' => $wishlist->getId(),
+                'recipient'   => $email
+            ]);
         } catch (\Exception $e) {
-            $this->logger->error('Error sending share email: ' . $e->getMessage());
+            $this->logger->error('Error sending share email: ' . $e->getMessage(), [
+                'wishlist_id' => $wishlist->getId(),
+                'recipient'   => $email
+            ]);
+            // Ne pas faire échouer le partage si l'email échoue
         } finally {
             $this->inlineTranslation->resume();
         }

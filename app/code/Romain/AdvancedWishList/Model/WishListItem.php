@@ -45,7 +45,26 @@ class WishListItem extends AbstractModel implements WishListItemInterface, Ident
 
     public function getIdentities(): array
     {
-        return [self::CACHE_TAG . '_' . $this->getId()];
+        $identities = [
+            // ⭐ Cache spécifique à cet item
+            self::CACHE_TAG . '_' . $this->getId(),
+
+            // ⭐ Cache des items de cette wishlist
+            'advanced_wishlist_items_' . $this->getWishlistId(),
+
+            // ⭐ Cache général des items
+            'advanced_wishlist_items',
+
+            // ⭐ Cache de la wishlist parente
+            'advanced_wishlist_' . $this->getWishlistId(),
+        ];
+
+        // ⭐ Si on peut récupérer le customer_id, l'ajouter
+        if ($this->getCustomerId()) {
+            $identities[] = 'customer_wishlist_items_' . $this->getCustomerId();
+        }
+
+        return $identities;
     }
 
     public function getItemId(): ?int
@@ -138,5 +157,13 @@ class WishListItem extends AbstractModel implements WishListItemInterface, Ident
     public function setTargetPrice(?float $targetPrice): WishListItemInterface
     {
         return $this->setData(self::TARGET_PRICE, $targetPrice);
+    }
+
+    /**
+     * Get customer ID (peut être récupéré via la wishlist parente)
+     */
+    public function getCustomerId(): ?int
+    {
+        return $this->getData('customer_id') ? (int)$this->getData('customer_id') : null;
     }
 }

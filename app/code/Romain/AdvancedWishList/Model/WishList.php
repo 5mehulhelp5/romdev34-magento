@@ -72,7 +72,12 @@ class WishList extends AbstractModel implements WishListInterface, IdentityInter
      */
     public function getIdentities(): array
     {
-        return [self::CACHE_TAG . '_' . $this->getId()];
+        return [
+            self::CACHE_TAG . '_' . $this->getId(),           // advanced_wishlist_46
+            'customer_wishlists_' . $this->getCustomerId(),   // customer_wishlists_123
+            'advanced_wishlist_list',                         // Pour invalider la liste
+            self::CACHE_TAG                                   // advanced_wishlist
+        ];
     }
 
     /**

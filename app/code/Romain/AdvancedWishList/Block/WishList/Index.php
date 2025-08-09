@@ -52,17 +52,35 @@ class Index extends AbsctractWishList implements IdentityInterface
     {
         $tags = parent::getCacheTags();
 
-        // Ajouter des tags génériques
+        // Tag général pour toutes les wishlists
         $tags[] = 'advanced_wishlist';
+
+        // ⭐ Tag spécifique pour la LISTE des wishlists
+        $tags[] = 'advanced_wishlist_list';
 
         if ($this->isCustomerLoggedIn()) {
             $customerId = $this->getCustomerId();
+
+            // ⭐ Tag pour la liste des wishlists de ce customer spécifique
+            $tags[] = 'customer_wishlists_' . $customerId;
             $tags[] = 'advanced_wishlist_customer_' . $customerId;
+
+            // ⭐ Ajouter les tags de chaque wishlist individuelle
+            try {
+                $wishlists = $this->getCustomerWishlistsWithCounts();
+                foreach ($wishlists as $wishlistData) {
+                    $wishlist = $wishlistData['wishlist'];
+                    $tags[] = 'advanced_wishlist_' . $wishlist->getId();
+                }
+            } catch (\Exception $e) {
+                // En cas d'erreur, garder au moins les tags génériques
+            }
         } else {
             $tags[] = 'advanced_wishlist_guest';
         }
 
-        return $tags;
+        return array_unique($tags);
+
     }
 
 
@@ -74,9 +92,21 @@ class Index extends AbsctractWishList implements IdentityInterface
     public function getIdentities(): array
     {
         $identities = [];
-        foreach ($this->getCustomerWishlistsWithCounts() as $wishlist) {
-            $identities = array_merge($identities, $wishlist['wishlist']->getIdentities());
-        };
+
+        // ⭐ Identités pour la liste elle-même
+        $identities[] = 'advanced_wishlist_list';
+
+        if ($this->isCustomerLoggedIn()) {
+            $customerId = $this->getCustomerId();
+            $identities[] = 'customer_wishlists_' . $customerId;
+        }
+
+        // Identités de chaque wishlist individuelle
+        foreach ($this->getCustomerWishlistsWithCounts() as $wishlistData) {
+            $wishlist = $wishlistData['wishlist'];
+            $identities = array_merge($identities, $wishlist->getIdentities());
+        }
+
         return array_unique($identities);
     }
 

@@ -61,7 +61,8 @@ class WishListShare extends AbstractModel implements WishListShareInterface,
     public function getIdentities(): array
     {
         $identities = [
-            self::CACHE_TAG . '_' . $this->getId()
+            self::CACHE_TAG . '_' . $this->getId(),
+            'wishlist_shares', // Cache général des partages
         ];
 
         // Ajouter les tags liés à la wishlist partagée

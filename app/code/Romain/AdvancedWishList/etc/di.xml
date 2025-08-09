@@ -11,14 +11,13 @@
         type="Romain\AdvancedWishList\Model\WishList" />
 
   <!-- Interface preferences -->
-    <preference for="Romain\AdvancedWishList\Api\Data\WishListItemInterface" 
+    <preference for="Romain\AdvancedWishList\Api\Data\WishListItemInterface"
                 type="Romain\AdvancedWishList\Model\WishListItem" />
-    
-    <preference for="Romain\AdvancedWishList\Api\Data\WishListShareInterface" 
+
+    <preference for="Romain\AdvancedWishList\Api\Data\WishListShareInterface"
                 type="Romain\AdvancedWishList\Model\WishListShare" />
-    
-    <preference for="Romain\AdvancedWishList\Api\WishListItemRepositoryInterface" 
+
+    <preference for="Romain\AdvancedWishList\Api\WishListItemRepositoryInterface"
                 type="Romain\AdvancedWishList\Model\WishListItemRepository" />
-                
 
 </config>

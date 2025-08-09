@@ -47,9 +47,9 @@ class Collection extends AbstractCollection
      *
      * @return $this
      */
-    public function addProductFilter(int $productId): static
+    public function addItemFilter(int $productId): static
     {
-        $this->addFieldToFilter('product_id', $productId);
+        $this->addFieldToFilter('item_id', $productId);
 
         return $this;
     }

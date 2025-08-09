@@ -90,12 +90,12 @@ interface WishListItemRepositoryInterface
      * Remove product from wishlist
      *
      * @param int $wishlistId
-     * @param int $productId
+     * @param int $itemId
      *
      * @return bool
      * @throws CouldNotDeleteException
      */
-    public function removeProductFromWishlist(int $wishlistId, int $productId): bool;
+    public function removeItemFromWishlist(int $wishlistId, int $itemId): bool;
 
     /**
      * Check if product is in wishlist

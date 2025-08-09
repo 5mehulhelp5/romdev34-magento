@@ -4,7 +4,6 @@ define(["uiComponent", "ko"], function (Component, ko) {
     return Component.extend({
         initialize: function () {
             this._super();
-            console.log('titi toto');
 
             // Observables pour le formulaire
             this.wishlistName = ko.observable("");

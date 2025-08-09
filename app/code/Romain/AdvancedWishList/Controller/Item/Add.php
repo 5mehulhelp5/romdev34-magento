@@ -79,13 +79,13 @@ class Add extends AbstractWishList implements HttpPostActionInterface
                 'target_price' => $target_price ? (float)$target_price : null
             ];
 
-            $item = $this->wishlistItemRepository->addProductToWishlist($wishlist_id, $product_id, $store_id, $options);
+              $this->wishlistItemRepository->addProductToWishlist($wishlist_id, $product_id, $store_id, $options);
 
-            $cache_context = $this->cacheContextFactory->create();
-            $cache_context->registerEntities(WishList::CACHE_TAG, [$wishlist_id]);
-            $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $cache_context]);
-            $cache_context->registerEntities(WishListItem::CACHE_TAG, [$item->getItemId()]);
-            $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $cache_context]);
+//            $cache_context = $this->cacheContextFactory->create();
+//            $cache_context->registerEntities(WishList::CACHE_TAG, [$wishlist_id]);
+//            $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $cache_context]);
+//            $cache_context->registerEntities(WishListItem::CACHE_TAG, [$item->getItemId()]);
+//            $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $cache_context]);
 
             return $result->setData([
                 'success' => true,

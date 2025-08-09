@@ -52,25 +52,42 @@ class WishListItems extends AbsctractWishList implements IdentityInterface
      */
     public function getIdentities(): array
     {
-        $identities = [];
+        $tags = [];
 
-        $identities = array_merge($identities, $this->wishlist->getIdentities());
-
-        $items = $this->getWishlistItemsWithProducts();
-        foreach ($items as $item_data) {
-            $item = $item_data['item'];
-            if ($item instanceof IdentityInterface) {
-                $identities = array_merge($identities, $item->getIdentities());
-            }
-
-            // Ajouter aussi les identities des produits
-            $product = $item_data['product'];
-            if ($product instanceof IdentityInterface) {
-                $identities = array_merge($identities, $product->getIdentities());
-            }
+        if (!isset($this->wishlist)) {
+            return $tags;
         }
 
-        return array_unique($identities);
+        // ⭐ Tags génériques pour les items
+        $tags[] = 'advanced_wishlist_items';
+
+        // ⭐ Tags pour la wishlist elle-même
+        $tags[] = 'advanced_wishlist_' . $this->wishlist->getId();
+
+        // ⭐ Tags customer-specific
+        if ($this->wishlist->getCustomerId()) {
+            $tags[] = 'customer_wishlist_items_' . $this->wishlist->getCustomerId();
+            $tags[] = 'customer_wishlists_' . $this->wishlist->getCustomerId();
+        }
+
+        // ⭐ Tags pour chaque item et produit affiché
+        try {
+            $items = $this->getWishlistItemsWithProducts();
+            foreach ($items as $itemData) {
+                $item = $itemData['item'];
+                $product = $itemData['product'];
+
+                // Tag pour l'item spécifique
+                $tags[] = 'advanced_wishlist_item_' . $item->getId();
+
+                // Tag pour le produit
+                $tags[] = 'catalog_product_' . $product->getId();
+            }
+        } catch (\Exception $e) {
+            // En cas d'erreur, garder au moins les tags de base
+        }
+
+        return array_unique($tags);
     }
 
     /**
@@ -164,23 +181,6 @@ class WishListItems extends AbsctractWishList implements IdentityInterface
     public function getShareUrl(): string
     {
         return $this->getUrl('advancedwishlist/wishlist/share');
-    }
-
-    /**
-     * Get public wishlist view URL
-     *
-     * @return string
-     */
-    public function getPublicViewUrl(): string
-    {
-        if (!$this->wishlist->getShareCode()) {
-            return '';
-        }
-
-        return $this->getUrl(
-            'advancedwishlist/share/view',
-            [WishListInterface::SHARE_CODE => $this->wishlist->getShareCode()]
-        );
     }
 
     /**

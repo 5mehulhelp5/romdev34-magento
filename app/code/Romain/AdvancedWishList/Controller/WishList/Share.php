@@ -65,7 +65,7 @@ class Share implements HttpPostActionInterface
             }
 
             $customer_id = $this->customerSession->getCustomerId();
-            $share = $this->wishlistShareService->shareWishlist($wishlist_id, $email, $message, $customer_id);
+            $share = $this->wishlistShareService->shareWishlist($wishlist_id, $email, $message,(int) $customer_id);
 
             return $result->setData([
                 'success'  => true,

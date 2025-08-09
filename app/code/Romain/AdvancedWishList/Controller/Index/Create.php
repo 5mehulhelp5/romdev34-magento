@@ -128,8 +128,6 @@ class Create extends AbstractWishList implements HttpPostActionInterface, CsrfAw
             $wish_list->beforeSave();
             $this->wishListRepository->save($wish_list);
 
-            $this->clearWishlistCache();
-
             if ($is_default) {
                 $this->wishListRepository->setDefaultWishList($customer_id, (int)$wish_list->getId());
             }

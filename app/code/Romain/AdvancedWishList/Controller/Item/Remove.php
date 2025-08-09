@@ -58,14 +58,7 @@ class Remove extends AbstractWishList implements HttpPostActionInterface
             $item_id = (int)$this->request->getParam('item_id');
             $this->checkWishList($wishlist_id, $product_id);
 
-            $removed = $this->wishlistItemRepository->removeProductFromWishlist($wishlist_id, $product_id);
-
-            $cache_context = $this->cacheContextFactory->create();
-            $cache_context->registerEntities(WishList::CACHE_TAG, [$wishlist_id]);
-            $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $cache_context]);
-            $cache_context->registerEntities(WishListItem::CACHE_TAG, [$item_id]);
-            $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $cache_context]);
-            $this->cache->clean($cache_context->getIdentities());
+            $removed = $this->wishlistItemRepository->deleteById($item_id);
 
             if ($removed) {
                 return $result->setData([

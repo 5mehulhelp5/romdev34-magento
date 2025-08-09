@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <title>Shared Wishlist</title>
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Romain\AdvancedWishList\Block\WishListItem\WishListItems" 
-                   name="shared.wishlist.view" 
-                   template="Romain_AdvancedWishList::wishlist_items.phtml">
+            <block class="Romain\AdvancedWishList\Block\WishListItem\WishListItems"
+                   name="shared.wishlist.view"
+                   template="Romain_AdvancedWishList::wishlist_items/wishlist_items.phtml">
             </block>
         </referenceContainer>
     </body>

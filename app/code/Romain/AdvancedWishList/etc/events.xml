@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2025 Romain ITOFO. Tous droits réservés.
+ *
+ * @author  Romain ITOFO
+ * @license Propriétaire
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <event name="advanced_wishlist_save_after">
+        <observer name="invalidate_wishlist_cache_after_save"
+                  instance="Romain\AdvancedWishList\Observer\InvalidateWishlistCache" />
+    </event>
+
+    <event name="advanced_wishlist_delete_after">
+        <observer name="invalidate_wishlist_cache_after_delete"
+                  instance="Romain\AdvancedWishList\Observer\InvalidateWishlistCache" />
+    </event>
+
+    <event name="advanced_wishlist_item_save_after">
+        <observer name="invalidate_wishlist_item_cache_after_save"
+                  instance="Romain\AdvancedWishList\Observer\InvalidateWishlistItemCache" />
+    </event>
+
+    <event name="advanced_wishlist_item_delete_after">
+        <observer name="invalidate_wishlist_item_cache_after_delete"
+                  instance="Romain\AdvancedWishList\Observer\InvalidateWishlistItemCache" />
+    </event>
+
+    <event name="advanced_wishlist_share_save_after">
+        <observer name="invalidate_wishlist_share_cache_after_save"
+                  instance="Romain\AdvancedWishList\Observer\InvalidateWishlistShareCache" />
+    </event>
+
+    <event name="advanced_wishlist_share_delete_after">
+        <observer name="invalidate_wishlist_share_cache_after_delete"
+                  instance="Romain\AdvancedWishList\Observer\InvalidateWishlistShareCache" />
+    </event>
+
+</config>
