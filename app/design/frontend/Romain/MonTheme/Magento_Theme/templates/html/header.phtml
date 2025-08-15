@@ -1,9 +1,7 @@
 <?php
 /**
-  * Copyright © 2025 Romain ITOFO. Tous droits réservés.
-  *
-  * @author Romain ITOFO
-  * @license Propriétaire
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
  */
 
 /**
@@ -11,43 +9,35 @@
  * @var \Magento\Framework\Escaper $escaper
  */
 $welcomeMessage = $block->getWelcome();
-
-// Vérifier si le client est connecté
-$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-$customerSession = $objectManager->get('Magento\Customer\Model\Session');
-$isLoggedIn = $customerSession->isLoggedIn();
 ?>
-
 <?php if ($block->getShowPart() == 'welcome'): ?>
-    <?php if ($isLoggedIn): ?>
-        <li class="greet welcome" data-bind="scope: 'customer'">
-            <!-- ko if: customer().fullname  -->
-            <span class="logged-in"
-                  data-bind="text: new String('<?= $escaper->escapeHtml(__('Welcome, %1!', '%1')) ?>').
-                  replace('%1', customer().fullname)">
-            </span>
-            <!-- /ko -->
-            <!-- ko ifnot: customer().fullname  -->
-            <span class="not-logged-in"
-                  data-bind="text: '<?= $escaper->escapeHtml($welcomeMessage) ?>'"></span>
-            <?= $block->getBlockHtml('header.additional') ?>
-            <!-- /ko -->
-        </li>
-        <?php // phpcs:ignore Magento2.Legacy.PhtmlTemplate ?>
-        <script type="text/x-magento-init">
-            {
-                "*": {
-                    "Magento_Ui/js/core/app": {
-                        "components": {
-                            "customer": {
-                                "component": "Magento_Customer/js/view/customer"
-                            }
+    <li class="greet welcome" data-bind="scope: 'customer'">
+        <!-- ko if: customer().fullname  -->
+        <span class="logged-in"
+              data-bind="text: new String('<?= $escaper->escapeHtml(__('Welcome, %1!', '%1')) ?>').
+              replace('%1', customer().fullname)">
+        </span>
+        <!-- /ko -->
+        <!-- ko ifnot: customer().fullname  -->
+        <span class="not-logged-in"
+              data-bind="text: '<?= $escaper->escapeHtml($welcomeMessage) ?>'"></span>
+        <?= $block->getBlockHtml('header.additional') ?>
+        <!-- /ko -->
+    </li>
+    <?php // phpcs:ignore Magento2.Legacy.PhtmlTemplate ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "customer": {
+                            "component": "Magento_Customer/js/view/customer"
                         }
                     }
                 }
             }
-        </script>
-    <?php endif; ?>
+        }
+    </script>
 <?php elseif ($block->getShowPart() == 'other'): ?>
     <?= $block->getChildHtml() ?>
 <?php endif ?>
